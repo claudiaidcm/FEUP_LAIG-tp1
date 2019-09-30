@@ -20,10 +20,10 @@ class MySphere extends CGFobject {
 		this.indices = [];
  		this.normals = [];
  		this.texCoords = [];
-		for(var j = 1; j <= this.slices+1; j++)
+		for(var j = 0; j <= this.slices; j++)
  		{
  			console.log("Write slice " + j)
- 			for(var i = 1; i <= this.stacks+1; i++)
+ 			for(var i = 0; i <= this.stacks; i++)
  			{
  				var temp = Math.PI-ang_height*i;
 				

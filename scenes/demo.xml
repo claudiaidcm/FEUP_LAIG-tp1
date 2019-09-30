@@ -49,10 +49,14 @@
             <rectangle x1="-0.5" y1="-1" x2="0.5" y2="1" />
         </primitive>
 
-     <primitive id="demoCylinder">
+        <primitive id="demoCylinder">
             <cylinder base = "2" top="1" height= "3" slices = "7" stacks="5" />
         </primitive>
-      
+
+        <primitive id="demoTorus">
+            <torus outer = "2" inner="1" slices = "7" loops="5" />
+        </primitive>
+
     </primitives>
 
     <components>

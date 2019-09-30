@@ -2,6 +2,7 @@
  * MyCylinder
  * @constructor
  */
+
 class MyCylinder extends CGFobject {
     constructor(scene, id, height, base, top, slices, stacks) {
         super(scene);

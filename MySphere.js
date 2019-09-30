@@ -9,7 +9,6 @@ class MySphere extends CGFobject {
 		this.radius = radius;
 		this.slices = slices;
 		this.stacks = stacks;
-		console.log(radius + " radius and " + slices + " slices and " + stacks + " stacks")
 		this.initBuffers();
 	}
 	
@@ -21,13 +20,11 @@ class MySphere extends CGFobject {
 		this.indices = [];
  		this.normals = [];
  		this.texCoords = [];
-		console.log("There should be " + this.slices + " slices and " + this.stacks + " stacks")
-		for(var j = 0; j <= this.slices; j++)
+		for(var j = 1; j <= this.slices+1; j++)
  		{
- 			console.log("Test 3 " + j)
- 			for(var i = 0; i <= this.stacks; i++)
+ 			console.log("Write slice " + j)
+ 			for(var i = 1; i <= this.stacks+1; i++)
  			{
- 				console.log("Test " + i + " stacks and " + j + " slices")
  				var temp = Math.PI-ang_height*i;
 				
 				this.vertices.push( Math.sin(temp)*Math.cos(j*ang_perimeter)*this.radius,

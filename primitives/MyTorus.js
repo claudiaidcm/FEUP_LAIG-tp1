@@ -48,7 +48,7 @@ class MyTorus extends CGFobject {
 				this.normals.push(
 					Math.cos(loopAng*j) * Math.cos(alphaAng*i), 
                     Math.cos(loopAng*j) * Math.sin(alphaAng*i),
-                    0
+                    Math.sin(loopAng*j)
 				);
 
 			}

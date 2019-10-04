@@ -640,7 +640,7 @@ class MySceneGraph {
                 // z1
                 var z1 = this.reader.getFloat(grandChildren[0], 'z1');
                 if (!(z1 != null && !isNaN(z1)))
-                    return "unable to parse x1 of the primitive coordinates for ID = " + primitiveId;
+                    return "unable to parse z1 of the primitive coordinates for ID = " + primitiveId;
 
                 // x2
                 var x2 = this.reader.getFloat(grandChildren[0], 'x2');
@@ -655,7 +655,7 @@ class MySceneGraph {
                 // z2
                 var z2 = this.reader.getFloat(grandChildren[0], 'z2');
                 if (!(z2 != null && !isNaN(z2)))
-                    return "unable to parse x1 of the primitive coordinates for ID = " + primitiveId;
+                    return "unable to parse z2 of the primitive coordinates for ID = " + primitiveId;
                    
                 // x3
                 var x3 = this.reader.getFloat(grandChildren[0], 'x3');
@@ -670,7 +670,7 @@ class MySceneGraph {
                 // z3
                 var z3 = this.reader.getFloat(grandChildren[0], 'z3');
                 if (!(z3 != null && !isNaN(z3)))
-                    return "unable to parse x1 of the primitive coordinates for ID = " + primitiveId;
+                    return "unable to parse z3 of the primitive coordinates for ID = " + primitiveId;
 
                 var trig = new MyTriangle(this.scene, primitiveId, x1, x2, x3, y1, y2, y3, z1, z2, z3);
 
@@ -879,12 +879,12 @@ class MySceneGraph {
 
 
         this.scene.getMatrix();
-        this.scene.multMatrix(this.transformations["demoTransform"]);
+        //this.scene.multMatrix(this.transformations["demoTransform"]);
         //To test the parsing/creation of the primitives, call the display function directly
         //this.primitives['demoRectangle'].display();
         //this.primitives['demoCylinder'].display();
         //this.primitives['demoTorus'].display();
-        //this.primitives['demoTriangle'].display();
-         this.primitives['demoSphere'].display();
+        this.primitives['demoTriangle'].display();
+        //this.primitives['demoSphere'].display();
     }
 }

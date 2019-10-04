@@ -1,4 +1,3 @@
-
 //---------------------------------------------------------------------------
 
 var DEGREE_TO_RAD = Math.PI / 180;
@@ -490,7 +489,7 @@ class MySceneGraph {
                         var angle = this.reader.getFloat(grandChildren[j], 'angle');
                         var axis = this.reader.getString(grandChildren[j], 'axis');
 
-                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, angle * (Math.PI / 180), this.axisCoords[axis]);
+                        transfMatrix = mat4.rotate(transfMatrix, transfMatrix, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
                         break;
                 }
             }
@@ -865,12 +864,12 @@ class MySceneGraph {
 
 
         this.scene.getMatrix();
-        this.scene.multMatrix(this.transformations["demoTransform"]);
+        //this.scene.multMatrix(this.transformations["demoTransform"]);
         //To test the parsing/creation of the primitives, call the display function directly
         //this.primitives['demoRectangle'].display();
         //this.primitives['demoCylinder'].display();
-        //this.primitives['demoTorus'].display();
+        this.primitives['demoTorus'].display();
         //this.primitives['demoTriangle'].display();
-         this.primitives['demoSphere'].display();
+         //this.primitives['demoSphere'].display();
     }
 }

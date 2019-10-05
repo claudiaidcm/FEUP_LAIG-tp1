@@ -37,9 +37,10 @@
 
     <transformations>
         <transformation id="demoTransform">
-            <scale x="1" y="0.5" z="1" />
-            <rotate axis="x" angle="-45" />
-            <rotate axis="z" angle="-45" />
+            <scale x="1" y="0.2" z="1" />
+            <rotate axis="x" angle="45" />
+            <rotate axis="y" angle="45" />
+            <rotate axis="z" angle="45" />
         </transformation>
     </transformations>
 
@@ -49,7 +50,7 @@
         </primitive>
 
         <primitive id="demoTriangle">
-            <triangle x1="-1" y1="-1" x2="1" y2="-1" x3="0" y3="1" />
+            <triangle x1="2" x2="0" x3="0" y1="2" y2="2" y3="0" z1="2" z2="0" z3="0"/>
         </primitive>
 
         <primitive id="demoSphere">

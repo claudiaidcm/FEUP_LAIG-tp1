@@ -6,6 +6,11 @@
             <from x="30" y="15" z="30" />
             <to x="0" y="-2" z="0" />
         </perspective>
+
+        <ortho id="scene_ortho" near="0.1" far="40" left="-30" right="20" top="10" bottom="-10">
+            <from x="5" y="5" z="20" />
+            <to x="5" y="5" z="0" />
+        </ortho>
     </views>
 
     <ambient>
@@ -21,6 +26,14 @@
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
             <specular r="1.0" g="1.0" b="1.0" a="1.0" />
         </omni>
+
+        <spot id="onion_rings" enabled="0" angle="10" exponent="4">
+            <location x="1.9" y="2" z="4.6" w="1" />
+            <target x="2.1" y="2.1" z="4.1" />
+            <ambient r="1" g="1" b="1" a="1" />
+            <diffuse r="1" g="1" b="1" a="1.0" />
+            <specular r="1" g="1" b="1" a="1.0" />
+        </spot>
     </lights>
 
     <textures>
@@ -41,10 +54,10 @@
             <specular r="0.6" g="0.0" b="0.0" a="1.0" />
         </material>
         <material id="temp" shininess="10">
-            <emission r="0.9" g="0.9" b="0.9" a="1.0" />
-            <ambient r="0.9" g="0.9" b="0.9" a="1.0" />
-            <diffuse r="0.9" g="0.9" b="0.9" a="1.0" />
-            <specular r="0.9" g="0.9" b="0.9" a="1.0" />
+            <emission r="0.2" g="0.2" b="0.2" a="1.0" />
+            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
+            <diffuse r="0.2" g="0.2" b="0.2" a="1.0" />
+            <specular r="0.2" g="0.2" b="0.2" a="1.0" />
         </material>
     </materials>
 

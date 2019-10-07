@@ -463,6 +463,8 @@ class MySceneGraph {
         // Any number of materials.
         for (var i = 0; i < children.length; i++) {
 
+            var global = [];
+
             if (children[i].nodeName != "material") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
@@ -477,11 +479,18 @@ class MySceneGraph {
             if (this.materials[materialID] != null)
                 return "ID must be unique for each light (conflict: ID = " + materialID + ")";
 
-            //Continue here
-            this.onXMLMinorError("To do: Parse materials.");
+            const shininess = this.reader.getFloat(children[i], 'shininess');
+            const emission = this.parseColor(children[i].children[0]);
+            const ambient = this.parseColor(children[i].children[1]);
+            const diffuse = this.parseColor(children[i].children[2]);
+            const specular = this.parseColor(children[i].children[3]);
+        
+            global.push(...[shininess, emission,ambient, diffuse, specular]);
+        
+            this.materials[materialID]=global;
         }
 
-        //this.log("Parsed materials");
+        this.log("Parsed materials");
         return null;
     }
 
@@ -921,15 +930,15 @@ class MySceneGraph {
     displayScene() {
         //To do: Create display loop for transversing the scene graph
 
-
         this.scene.getMatrix();
         //this.scene.multMatrix(this.transformations["demoTransform"]);
+
         //To test the parsing/creation of the primitives, call the display function directly
         //this.primitives['demoRectangle'].display();
         //this.primitives['demoCylinder'].display();
-        this.primitives['demoTorus'].display();
+        //this.primitives['demoTorus'].display();
         //this.primitives['demoTriangle'].display();
-         //this.primitives['demoSphere'].display();
+        //this.primitives['demoSphere'].display();
 
     }
 }

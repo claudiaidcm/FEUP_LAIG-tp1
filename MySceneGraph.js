@@ -227,7 +227,45 @@ class MySceneGraph {
      * @param {view block element} viewsNode
      */
     parseView(viewsNode) {
-        this.onXMLMinorError("To do: Parse views and create cameras.");
+        var view_children = viewsNode.children;
+
+        this.cameras = [];
+       
+
+        for (var i=0; i<view_children.length; i++) {
+            // Storing view information
+            var global = [];
+
+            var view_id = this.reader.getString(view_children[i], 'id');
+
+            var near = this.reader.getFloat(view_children[i], 'near');
+            var far = this.reader.getFloat(view_children[i], 'far');
+            var from = this.parseCoordinates3D(view_children[i].children[0]);
+            var to = this.parseCoordinates3D(view_children[i].children[1]);
+
+            global.push(...[near, far, from, to]);
+    
+
+            if (view_children[i].nodeName == "perspective")
+            {
+                var angle = this.reader.getFloat(view_children[i], 'angle');
+                global.push(angle);
+
+            }
+            else if (view_children[i].nodeName == "ortho") {
+                var left = this.reader.getFloat(view_children[i], 'left');
+                var right = this.reader.getFloat(view_children[i], 'right');
+                var top = this.reader.getFloat(view_children[i], 'top');
+                var bottom = this.reader.getFloat(view_children[i], 'bottom');
+
+                global.push(...[left, right, top, bottom]);
+            }
+
+            this.cameras[view_id] = global;
+        }
+        
+
+        this.log("Parsed views");
 
         return null;
     }
@@ -391,9 +429,22 @@ class MySceneGraph {
      * @param {textures block element} texturesNode
      */
     parseTextures(texturesNode) {
-
         //For each texture in textures block, check ID and file URL
-        this.onXMLMinorError("To do: Parse textures.");
+        this.textures = [];
+        var children = texturesNode.children;
+
+        for(var i = 0; i < children.length; ++i) {
+            // Storing light information
+            var global = [];
+            var id = this.reader.getString(children[i], 'id');
+            var file = this.reader.getString(children[i], 'file');
+    
+            global.push(file);
+    
+            this.textures[id]=global;
+        }
+
+        this.log("Parsed textures");
         return null;
     }
 
@@ -692,10 +743,6 @@ class MySceneGraph {
                 var sphr = new MySphere(this.scene, primitiveId, radius, slices, stacks);
 
                 this.primitives[primitiveId] = sphr;
-            }
-
-            else {
-                console.warn("To do: Parse other primitives.");
             }
         }
 

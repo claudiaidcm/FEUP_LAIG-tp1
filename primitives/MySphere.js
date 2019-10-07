@@ -22,7 +22,6 @@ class MySphere extends CGFobject {
  		this.texCoords = [];
 		for(var j = 0; j <= this.slices; j++)
  		{
- 			console.log("Write slice " + j)
  			for(var i = 0; i <= this.stacks; i++)
  			{
  				var temp = Math.PI-ang_height*i;

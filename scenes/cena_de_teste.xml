@@ -13,10 +13,10 @@
         </ortho>
     </views>
 
-    <ambient>
+    <globals>
         <ambient r="0.3" g="0.3" b="0.3" a="1.0" />
         <background r="0.0" g="0.0" b="0.0" a="1.0" />
-    </ambient>
+    </globals>
 
    
     <lights>
@@ -37,7 +37,6 @@
     </lights>
 
     <textures>
-        <texture id="demoTexture" file="scenes/images/vidral.jpg" />
         <texture id="tray" file="scenes/images/wood.png" />
         <texture id="onionRing" file="scenes/images/onion_ring.png" />
         <texture id="bag" file="scenes/images/wood1.png" />

@@ -55,6 +55,8 @@ class MySceneGraph {
         // Here should go the calls for different functions to parse the various blocks
         var error = this.parseXMLFile(rootElement);
 
+
+
         if (error != null) {
             this.onXMLError(error);
             return;
@@ -230,9 +232,9 @@ class MySceneGraph {
         var view_children = viewsNode.children;
 
         this.cameras = [];
-       
 
-        for (var i=0; i<view_children.length; i++) {
+
+        for (var i = 0; i < view_children.length; i++) {
             // Storing view information
             var global = [];
 
@@ -244,10 +246,9 @@ class MySceneGraph {
             var to = this.parseCoordinates3D(view_children[i].children[1]);
 
             global.push(...[near, far, from, to]);
-    
 
-            if (view_children[i].nodeName == "perspective")
-            {
+
+            if (view_children[i].nodeName == "perspective") {
                 var angle = this.reader.getFloat(view_children[i], 'angle');
                 global.push(angle);
 
@@ -263,7 +264,7 @@ class MySceneGraph {
 
             this.cameras[view_id] = global;
         }
-        
+
 
         this.log("Parsed views");
 
@@ -433,15 +434,15 @@ class MySceneGraph {
         this.textures = [];
         var children = texturesNode.children;
 
-        for(var i = 0; i < children.length; ++i) {
+        for (var i = 0; i < children.length; ++i) {
             // Storing light information
             var global = [];
             var id = this.reader.getString(children[i], 'id');
             var file = this.reader.getString(children[i], 'file');
-    
+
             global.push(file);
-    
-            this.textures[id]=global;
+
+            this.textures[id] = global;
         }
 
         this.log("Parsed textures");
@@ -484,10 +485,10 @@ class MySceneGraph {
             const ambient = this.parseColor(children[i].children[1]);
             const diffuse = this.parseColor(children[i].children[2]);
             const specular = this.parseColor(children[i].children[3]);
-        
-            global.push(...[shininess, emission,ambient, diffuse, specular]);
-        
-            this.materials[materialID]=global;
+
+            global.push(...[shininess, emission, ambient, diffuse, specular]);
+
+            this.materials[materialID] = global;
         }
 
         this.log("Parsed materials");
@@ -708,12 +709,12 @@ class MySceneGraph {
                 var y2 = this.reader.getFloat(grandChildren[0], 'y2');
                 if (!(y2 != null && !isNaN(y2)))
                     return "unable to parse y2 of the primitive coordinates for ID = " + primitiveId;
-                
+
                 // z2
                 var z2 = this.reader.getFloat(grandChildren[0], 'z2');
                 if (!(z2 != null && !isNaN(z2)))
                     return "unable to parse z2 of the primitive coordinates for ID = " + primitiveId;
-                   
+
                 // x3
                 var x3 = this.reader.getFloat(grandChildren[0], 'x3');
                 if (!(x3 != null && !isNaN(x3)))
@@ -723,7 +724,7 @@ class MySceneGraph {
                 var y3 = this.reader.getFloat(grandChildren[0], 'y3');
                 if (!(y3 != null && !isNaN(y3)))
                     return "unable to parse y3 of the primitive coordinates for ID = " + primitiveId;
-                
+
                 // z3
                 var z3 = this.reader.getFloat(grandChildren[0], 'z3');
                 if (!(z3 != null && !isNaN(z3)))
@@ -764,6 +765,7 @@ class MySceneGraph {
    * @param {components block element} componentsNode
    */
     parseComponents(componentsNode) {
+
         var children = componentsNode.children;
 
         this.components = [];
@@ -794,6 +796,7 @@ class MySceneGraph {
             nodeNames = [];
             for (var j = 0; j < grandChildren.length; j++) {
                 nodeNames.push(grandChildren[j].nodeName);
+
             }
 
             var transformationIndex = nodeNames.indexOf("transformation");
@@ -801,9 +804,45 @@ class MySceneGraph {
             var textureIndex = nodeNames.indexOf("texture");
             var childrenIndex = nodeNames.indexOf("children");
 
-            this.onXMLMinorError("To do: Parse components.");
             // Transformations
-            
+            var transfs = grandChildren[transformationIndex].children;
+            var transformationref;
+            var spe_transformations = [];
+
+            for (var i = 0; i < transfs.length; i++) {
+                if (transfs[i].nodeName == "transformationref") {
+                    var transformationID = getString(transfs[i], 'id');
+                    transformationref = transformationID;
+                }
+                else {
+                    var transfMatrix = mat4.create();
+
+                    switch (transfs[i].nodeName) {
+                        case 'translate':
+                            var coordinates = this.parseCoordinates3D(transfs[i], "translate transformation for ID " + transformationID);
+                            if (!Array.isArray(coordinates))
+                                return coordinates;
+    
+                            transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
+                            break;
+                        case 'scale':
+                            var coordinates = this.parseCoordinates3D(transfs[i], "scale transformation for ID " + transformationID);
+                            if (!Array.isArray(coordinates))
+                                return coordinates;
+    
+                            transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
+                            break;
+                        case 'rotate':
+                            var angle = this.reader.getFloat(transfs[i], 'angle');
+                            var axis = this.reader.getString(transfs[i], 'axis');
+    
+                            transfMatrix = mat4.rotate(transfMatrix, transfMatrix, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
+                            break;
+                    }
+
+                    spe_transformations.push(transfMatrix);
+                }
+            }
             // Materials
 
             // Texture
@@ -939,6 +978,5 @@ class MySceneGraph {
         //this.primitives['demoTorus'].display();
         //this.primitives['demoTriangle'].display();
         //this.primitives['demoSphere'].display();
-
     }
 }

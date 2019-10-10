@@ -807,7 +807,7 @@ class MySceneGraph {
             // Transformations
             var transfs = grandChildren[transformationIndex].children;
             var transformationref;
-            var spe_transformations = [];
+            var comp_transformations = [];
 
             for (var i = 0; i < transfs.length; i++) {
                 if (transfs[i].nodeName == "transformationref") {
@@ -822,30 +822,44 @@ class MySceneGraph {
                             var coordinates = this.parseCoordinates3D(transfs[i], "translate transformation for ID " + transformationID);
                             if (!Array.isArray(coordinates))
                                 return coordinates;
-    
+
                             transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
                             break;
                         case 'scale':
                             var coordinates = this.parseCoordinates3D(transfs[i], "scale transformation for ID " + transformationID);
                             if (!Array.isArray(coordinates))
                                 return coordinates;
-    
+
                             transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
                             break;
                         case 'rotate':
                             var angle = this.reader.getFloat(transfs[i], 'angle');
                             var axis = this.reader.getString(transfs[i], 'axis');
-    
+
                             transfMatrix = mat4.rotate(transfMatrix, transfMatrix, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
                             break;
                     }
 
-                    spe_transformations.push(transfMatrix);
+                    comp_transformations.push(transfMatrix);
                 }
             }
             // Materials
+            var mats = grandChildren[materialsIndex].children;
+            var comp_materials = [];
+            for (var i = 0; i < mats.length; i++) {
+                var material_id = this.reader.getString(mats[i], 'id');
+                comp_materials.push(material_id);
+            }
 
             // Texture
+            const text = grandChildren[textureIndex];
+            const comp_text = this.reader.getString(text, 'id');
+            var length_s, length_t;
+            if ((comp_text == "inherit" && this.reader.hasAttribute(text, "length_s") && this.reader.hasAttribute(text, "length_t")) ||
+                (comp_text != "inherit" && comp_text != "none")) {
+                length_s = this.reader.getFloat(text, 'length_s');
+                length_t = this.reader.getFloat(text, 'length_t');
+            }
 
             // Children
         }

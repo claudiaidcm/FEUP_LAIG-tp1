@@ -791,6 +791,8 @@ class MySceneGraph {
             if (this.components[componentID] != null)
                 return "ID must be unique for each component (conflict: ID = " + componentID + ")";
 
+            this.nodes[componentID] = new MyComponent(this, componentID);
+
             grandChildren = children[i].children;
 
             nodeNames = [];
@@ -806,91 +808,75 @@ class MySceneGraph {
 
             // Transformations
             var transfs = grandChildren[transformationIndex].children;
-            var transformationref;
-            var comp_transformations = [];
 
             for (var i = 0; i < transfs.length; i++) {
                 if (transfs[i].nodeName == "transformationref") {
                     var transformationID = getString(transfs[i], 'id');
-                    transformationref = transformationID;
+                    this.nodes[componentID].transformationref = transformationID;
                 }
                 else {
-                    var transfMatrix = mat4.create();
-
                     switch (transfs[i].nodeName) {
                         case 'translate':
                             var coordinates = this.parseCoordinates3D(transfs[i], "translate transformation for ID " + transformationID);
                             if (!Array.isArray(coordinates))
                                 return coordinates;
 
-                            transfMatrix = mat4.translate(transfMatrix, transfMatrix, coordinates);
+                            mat4.translate(this.nodes[componentID].transformation, this.nodes[componentID].transformation, coordinates);
                             break;
                         case 'scale':
                             var coordinates = this.parseCoordinates3D(transfs[i], "scale transformation for ID " + transformationID);
                             if (!Array.isArray(coordinates))
                                 return coordinates;
 
-                            transfMatrix = mat4.scale(transfMatrix, transfMatrix, coordinates);
+                            mat4.scale(this.nodes[componentID].transformation, this.nodes[componentID].transformation, coordinates);
                             break;
                         case 'rotate':
                             var angle = this.reader.getFloat(transfs[i], 'angle');
                             var axis = this.reader.getString(transfs[i], 'axis');
 
-                            transfMatrix = mat4.rotate(transfMatrix, transfMatrix, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
+                            mat4.rotate(this.nodes[componentID].transformation, this.nodes[componentID].transformation, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
                             break;
                     }
-
-                    comp_transformations.push(transfMatrix);
                 }
             }
+
             // Materials
-            var mats = grandChildren[materialsIndex].children;
+            var grandgrandChildren = grandChildren[materialsIndex].children;
             var comp_materials = [];
-            for (var i = 0; i < mats.length; i++) {
-                var material_id = this.reader.getString(mats[i], 'id');
+            for (var i = 0; i < grandgrandChildren.length; i++) {
+                var material_id = this.reader.getString(grandgrandChildren[i], 'id');
                 comp_materials.push(material_id);
             }
 
-            // Texture
-            var text = grandChildren[textureIndex];
-            var texture_id = this.reader.getString(text, 'id');
-            var length_s, length_t;
-            if ((comp_texture == "inherit" && this.reader.hasAttribute(text, "length_s") && this.reader.hasAttribute(text, "length_t")) ||
-                (comp_texture != "inherit" && comp_texture != "none")) {
-                length_s = this.reader.getFloat(text, 'length_s');
-                length_t = this.reader.getFloat(text, 'length_t');
-            }
+            this.nodes[componentID].materials = comp_materials;
 
-            var comp_texture = [];
-            comp_texture.push(...[texture_id, length_s, length_t]);
+            // Texture
+            var texture_id = this.reader.getString(grandChildren[textureIndex], 'id');
+            this.nodes[componentID].texture = texture_id;
+
+            if ((texture_id == "inherit" && this.reader.hasAttribute(grandChildren[textureIndex], "length_s") && this.reader.hasAttribute(grandChildren[textureIndex], "length_t")) ||
+                (texture_id != "inherit" && texture_id != "none")) {
+                this.nodes[componentID].length_s = this.reader.getFloat(grandChildren[textureIndex], 'length_s');
+                this.nodes[componentID].length_t = this.reader.getFloat(grandChildren[textureIndex], 'length_t');
+            }
 
             // Children
             var child = grandChildren[childrenIndex];
-            var comp_components = [];
-            var comp_primitives = [];
 
             for (var i = 0; i < child.length; i++) {
                 var child_id = this.reader.getString(child[i], 'id');
 
                 if (child_id.nodeName === "componentref") {
-                    comp_components.push(child_id);
+                    this.nodes[componentID].components.push(child_id);
                 }
-                else if (child_id.nodeName === "componentref") {
-                    comp_primitives.push(child_id);
+                else if (child_id.nodeName === "primitiveref") {
+                    this.nodes[componentID].primitives.push(child_id);
                 }
             }
-            
-            var component = [];
-
-            component.push(...[transformationref, 
-                comp_transformations, 
-                comp_materials, 
-                comp_texture, 
-                comp_primitives, 
-                comp_components]);
-            
-            this.components[componentID] = component;
         }
+
+        this.log("Parsed components");
+        return null;
     }
 
 
@@ -1009,16 +995,12 @@ class MySceneGraph {
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-        //To do: Create display loop for transversing the scene graph
+        this.processNode('demoRoot');
 
-        this.scene.getMatrix();
-        //this.scene.multMatrix(this.transformations["demoTransform"]);
+    }
 
-        //To test the parsing/creation of the primitives, call the display function directly
-        //this.primitives['demoRectangle'].display();
-        //this.primitives['demoCylinder'].display();
-        //this.primitives['demoTorus'].display();
-        //this.primitives['demoTriangle'].display();
-        //this.primitives['demoSphere'].display();
+    processNode(nodeID) {
+      
+
     }
 }

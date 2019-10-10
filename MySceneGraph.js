@@ -852,16 +852,44 @@ class MySceneGraph {
             }
 
             // Texture
-            const text = grandChildren[textureIndex];
-            const comp_text = this.reader.getString(text, 'id');
+            var text = grandChildren[textureIndex];
+            var texture_id = this.reader.getString(text, 'id');
             var length_s, length_t;
-            if ((comp_text == "inherit" && this.reader.hasAttribute(text, "length_s") && this.reader.hasAttribute(text, "length_t")) ||
-                (comp_text != "inherit" && comp_text != "none")) {
+            if ((comp_texture == "inherit" && this.reader.hasAttribute(text, "length_s") && this.reader.hasAttribute(text, "length_t")) ||
+                (comp_texture != "inherit" && comp_texture != "none")) {
                 length_s = this.reader.getFloat(text, 'length_s');
                 length_t = this.reader.getFloat(text, 'length_t');
             }
 
+            var comp_texture = [];
+            comp_texture.push(...[texture_id, length_s, length_t]);
+
             // Children
+            var child = grandChildren[childrenIndex];
+            var comp_components = [];
+            var comp_primitives = [];
+
+            for (var i = 0; i < child.length; i++) {
+                var child_id = this.reader.getString(child[i], 'id');
+
+                if (child_id.nodeName === "componentref") {
+                    comp_components.push(child_id);
+                }
+                else if (child_id.nodeName === "componentref") {
+                    comp_primitives.push(child_id);
+                }
+            }
+            
+            var component = [];
+
+            component.push(...[transformationref, 
+                comp_transformations, 
+                comp_materials, 
+                comp_texture, 
+                comp_primitives, 
+                comp_components]);
+            
+            this.components[componentID] = component;
         }
     }
 

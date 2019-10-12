@@ -14,22 +14,14 @@ class MyComponent {
         this.texture;
         this.length_s = 1;
         this.length_t = 1;
-        this.components = [];
-        this.primitives = [];
+        this.children = [];
     };
 
     /**
     * Adds a child to the chidlren array
     */
-    addComponent(id) {
-        this.components.push(id);
-    };
-
-    /**
-    * Adds a primitive to the primitives array
-    */
-    addPrimitive(id) {
-        this.primitives.push(id);
+    addChild(id) {
+        this.children.push(id);
     };
 
 };

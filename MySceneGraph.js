@@ -265,7 +265,6 @@ class MySceneGraph {
             this.cameras[view_id] = global;
         }
 
-
         this.log("Parsed views");
 
         return null;
@@ -754,6 +753,8 @@ class MySceneGraph {
 
                 this.primitives[primitiveId] = sphr;
             }
+
+            
         }
 
         this.log("Parsed primitives");
@@ -861,17 +862,11 @@ class MySceneGraph {
             }
 
             // Children
-            var child = grandChildren[childrenIndex];
+            var child = grandChildren[childrenIndex].children;
 
             for (var i = 0; i < child.length; i++) {
-                var child_id = this.reader.getString(child[i], 'id');
-
-                if (child_id.nodeName === "componentref") {
-                    this.nodes[componentID].components.push(child_id);
-                }
-                else if (child_id.nodeName === "primitiveref") {
-                    this.nodes[componentID].primitives.push(child_id);
-                }
+                var child_id = this.reader.getString(child[i], 'id');                
+                    this.nodes[componentID].addChild(child_id);
             }
         }
 
@@ -996,11 +991,14 @@ class MySceneGraph {
      */
     displayScene() {
         this.processNode('demoRoot');
-
     }
 
     processNode(nodeID) {
-      
+      var aux = this.nodes[nodeID].children;
+
+      for (var i=0; i<aux.length; i++) {
+          this.primitives[aux[i]].display();
+      }
 
     }
 }

@@ -812,7 +812,7 @@ class MySceneGraph {
             for (var k = 0; k < transfs.length; k++) {
                 if (transfs[k].nodeName == "transformationref") {
                     var transformationID = this.reader.getString(transfs[k], 'id');
-                    this.nodes[componentID].transformationref = transformationID;
+                    this.nodes[componentID].transformation = this.transformations[transformationID];
                 }
                 else {
                     switch (transfs[k].nodeName) {
@@ -994,21 +994,23 @@ class MySceneGraph {
     }
 
     processNode(nodeID) {
-        var node = this.nodes[nodeID];
-        var child = node.children;
+        var component = this.nodes[nodeID];
+        var child = component.children;
+
+        this.scene.pushMatrix();
+
+        this.scene.multMatrix(component.transformation);
 
         for (var i = 0; i < child.length; i++) {
             var childID = child[i];
             if (this.primitives[childID] != null) {
-                this.scene.pushMatrix();
-                this.primitives[child[i]].display();
-                this.scene.popMatrix();
+                this.primitives[child[i]].display();  
             }
             else {
-                this.scene.pushMatrix();
                 this.processNode(child[i]);
-                this.scene.popMatrix();
             }
         }
+
+        this.scene.popMatrix();
     }
 }

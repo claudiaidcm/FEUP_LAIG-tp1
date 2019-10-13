@@ -990,7 +990,7 @@ class MySceneGraph {
      * Displays the scene, processing each node, starting in the root node.
      */
     displayScene() {
-        this.processNode('demoRoot');
+        this.processNode(this.idRoot);
     }
 
     processNode(nodeID) {

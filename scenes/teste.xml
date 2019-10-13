@@ -1,5 +1,5 @@
 <lxs>
-    <scene root="scene_root" axis_length="5" />
+    <scene root="demoRoot" axis_length="5" />
 
     <views default="defaultCamera">
         <perspective id="defaultCamera" near="0.1" far="500" angle="45">
@@ -13,10 +13,10 @@
         </ortho>
     </views>
 
-    <globals>
+    <ambient>
         <ambient r="0.3" g="0.3" b="0.3" a="1.0" />
         <background r="0.0" g="0.0" b="0.0" a="1.0" />
-    </globals>
+    </ambient>
 
    
     <lights>
@@ -37,6 +37,7 @@
     </lights>
 
     <textures>
+        <texture id="demoTexture" file="scenes/images/vidral.jpg" />
         <texture id="tray" file="scenes/images/wood.png" />
         <texture id="onionRing" file="scenes/images/onion_ring.png" />
         <texture id="bag" file="scenes/images/wood1.png" />
@@ -99,7 +100,7 @@
     </primitives>
 
     <components>
-        <component id="scene_root">
+        <component id="demoRoot">
             <transformation>
             </transformation>
             <materials>

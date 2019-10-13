@@ -78,6 +78,18 @@
             <texture id="demoTexture" length_s="10" length_t="10"/>
             <children>
                 <primitiveref id="demoTorus" />
+                <componentref id="tray" />
+            </children>
+        </component>
+
+        <component id="tray">
+            <transformation>
+            </transformation>
+            <materials>
+                <material id="demoMaterial" />
+            </materials>
+            <texture id="demoTexture" length_s="10" length_t="10"/>
+            <children>
                 <primitiveref id="demoRectangle" />
             </children>
         </component>

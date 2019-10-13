@@ -571,7 +571,6 @@ class MySceneGraph {
 
         // Any number of primitives.
         for (var i = 0; i < children.length; i++) {
-
             if (children[i].nodeName != "primitive") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
@@ -754,7 +753,7 @@ class MySceneGraph {
                 this.primitives[primitiveId] = sphr;
             }
 
-            
+
         }
 
         this.log("Parsed primitives");
@@ -777,7 +776,6 @@ class MySceneGraph {
 
         // Any number of components.
         for (var i = 0; i < children.length; i++) {
-
             if (children[i].nodeName != "component") {
                 this.onXMLMinorError("unknown tag <" + children[i].nodeName + ">");
                 continue;
@@ -785,6 +783,7 @@ class MySceneGraph {
 
             // Get id of the current component.
             var componentID = this.reader.getString(children[i], 'id');
+
             if (componentID == null)
                 return "no ID defined for componentID";
 
@@ -810,30 +809,30 @@ class MySceneGraph {
             // Transformations
             var transfs = grandChildren[transformationIndex].children;
 
-            for (var i = 0; i < transfs.length; i++) {
-                if (transfs[i].nodeName == "transformationref") {
-                    var transformationID = getString(transfs[i], 'id');
+            for (var k = 0; k < transfs.length; k++) {
+                if (transfs[k].nodeName == "transformationref") {
+                    var transformationID = this.reader.getString(transfs[k], 'id');
                     this.nodes[componentID].transformationref = transformationID;
                 }
                 else {
-                    switch (transfs[i].nodeName) {
+                    switch (transfs[k].nodeName) {
                         case 'translate':
-                            var coordinates = this.parseCoordinates3D(transfs[i], "translate transformation for ID " + transformationID);
+                            var coordinates = this.parseCoordinates3D(transfs[k], "translate transformation for ID " + transformationID);
                             if (!Array.isArray(coordinates))
                                 return coordinates;
 
                             mat4.translate(this.nodes[componentID].transformation, this.nodes[componentID].transformation, coordinates);
                             break;
                         case 'scale':
-                            var coordinates = this.parseCoordinates3D(transfs[i], "scale transformation for ID " + transformationID);
+                            var coordinates = this.parseCoordinates3D(transfs[k], "scale transformation for ID " + transformationID);
                             if (!Array.isArray(coordinates))
                                 return coordinates;
 
                             mat4.scale(this.nodes[componentID].transformation, this.nodes[componentID].transformation, coordinates);
                             break;
                         case 'rotate':
-                            var angle = this.reader.getFloat(transfs[i], 'angle');
-                            var axis = this.reader.getString(transfs[i], 'axis');
+                            var angle = this.reader.getFloat(transfs[k], 'angle');
+                            var axis = this.reader.getString(transfs[k], 'axis');
 
                             mat4.rotate(this.nodes[componentID].transformation, this.nodes[componentID].transformation, angle * DEGREE_TO_RAD, this.axisCoords[axis]);
                             break;
@@ -844,8 +843,8 @@ class MySceneGraph {
             // Materials
             var grandgrandChildren = grandChildren[materialsIndex].children;
             var comp_materials = [];
-            for (var i = 0; i < grandgrandChildren.length; i++) {
-                var material_id = this.reader.getString(grandgrandChildren[i], 'id');
+            for (var l = 0; l < grandgrandChildren.length; l++) {
+                var material_id = this.reader.getString(grandgrandChildren[l], 'id');
                 comp_materials.push(material_id);
             }
 
@@ -864,10 +863,11 @@ class MySceneGraph {
             // Children
             var child = grandChildren[childrenIndex].children;
 
-            for (var i = 0; i < child.length; i++) {
-                var child_id = this.reader.getString(child[i], 'id');                
-                    this.nodes[componentID].addChild(child_id);
+            for (var j = 0; j < child.length; j++) {
+                var child_id = this.reader.getString(child[j], 'id');
+                this.nodes[componentID].addChild(child_id);
             }
+
         }
 
         this.log("Parsed components");
@@ -994,11 +994,21 @@ class MySceneGraph {
     }
 
     processNode(nodeID) {
-      var aux = this.nodes[nodeID].children;
+        var node = this.nodes[nodeID];
+        var child = node.children;
 
-      for (var i=0; i<aux.length; i++) {
-          this.primitives[aux[i]].display();
-      }
-
+        for (var i = 0; i < child.length; i++) {
+            var childID = child[i];
+            if (this.primitives[childID] != null) {
+                this.scene.pushMatrix();
+                this.primitives[child[i]].display();
+                this.scene.popMatrix();
+            }
+            else {
+                this.scene.pushMatrix();
+                this.processNode(child[i]);
+                this.scene.popMatrix();
+            }
+        }
     }
 }

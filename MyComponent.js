@@ -15,6 +15,7 @@ class MyComponent {
         this.length_s = 1;
         this.length_t = 1;
         this.children = [];
+        this.primitives = [];
     };
 
     /**
@@ -22,6 +23,10 @@ class MyComponent {
     */
     addChild(id) {
         this.children.push(id);
+    };
+
+    addPrimitive(id) {
+        this.primitives.push(id);
     };
 
 };

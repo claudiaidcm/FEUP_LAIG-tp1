@@ -37,7 +37,6 @@
     </lights>
 
     <textures>
-        <texture id="demoTexture" file="scenes/images/vidral.jpg" />
         <texture id="tray" file="scenes/images/wood.png" />
         <texture id="onionRing" file="scenes/images/onion_ring.png" />
         <texture id="bag" file="scenes/images/wood1.png" />
@@ -54,16 +53,16 @@
             <specular r="0.6" g="0.0" b="0.0" a="1.0" />
         </material>
         <material id="temp" shininess="10">
-            <emission r="0.2" g="0.2" b="0.2" a="1.0" />
-            <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
-            <diffuse r="0.2" g="0.2" b="0.2" a="1.0" />
-            <specular r="0.2" g="0.2" b="0.2" a="1.0" />
+            <emission r="0" g="0" b="0" a="0.0" />
+            <ambient r="1" g="1" b="1" a="1.0" />
+            <diffuse r="1" g="1" b="1" a="1.0" />
+            <specular r="1" g="1" b="1" a="1.0" />
         </material>
     </materials>
 
     <transformations>
         <transformation id="plate_pos">
-            <translate x="0" y="0.2" z="4" />
+            <translate x="0" y="0.2" z="3.8" />
             <scale x="1.5" y="1.5" z="1.5" />
             <rotate axis="x" angle="-90" />
         </transformation>
@@ -322,7 +321,7 @@
             <materials>
                 <material id="inherit" />
             </materials>
-            <texture id="none" />
+            <texture id="bag" length_s="10" length_t="10"/>
             <children>
                 <componentref id="plate" />
                 <componentref id="onion_rings" />
@@ -337,7 +336,7 @@
                 <material id="temp" />
                 <material id="inherit" />
             </materials>
-            <texture id="bag" length_s="10" length_t="10" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="plate" />
             </children>
@@ -485,10 +484,10 @@
             <materials>
                 <material id="temp" />
             </materials>
-            <texture id="inherit" />
+            <texture id="cup" length_s="10" length_t="10"/>
             <children>
                 <componentref id="cup" />
-                <componentref id="straw" />
+                <componentref id="straws" />
             </children>
         </component> 
 
@@ -498,20 +497,20 @@
             <materials>
                 <material id="temp" />
             </materials>
-            <texture id="cup"  length_s="1" length_t="1" />
+            <texture id="inherit" />
             <children>
                 <primitiveref id="cup" />
             </children>
         </component> 
 
-        <component id="straw">
+        <component id="straws">
             <transformation>
                 <rotate axis="x" angle="15" />
             </transformation>
             <materials>
                 <material id="temp" />
             </materials>
-            <texture id="straw"  length_s="1" length_t="1" />
+            <texture id="straw" length_s="1" length_t="1" />
             <children>
                 <primitiveref id="straw" />
             </children>
@@ -527,7 +526,7 @@
             <materials>
                 <material id="temp" />
             </materials>
-            <texture id="napkin"  length_s="3" length_t="3" />
+            <texture id="napkin" length_s="3" length_t="3" />
             <children>
                 <primitiveref id="napkin" />
             </children>

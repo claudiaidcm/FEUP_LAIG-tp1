@@ -12,6 +12,8 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
+        this.lightValues = {};
+        
     }
 
     /**
@@ -82,9 +84,9 @@ class XMLscene extends CGFscene {
     }
 
     setDefaultAppearance() {
-        this.setAmbient(0.2, 0.4, 0.8, 1.0);
-        this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-        this.setSpecular(0.2, 0.4, 0.8, 1.0);
+        this.setAmbient(0.2, 0.2, 0.8, 1.0);
+        this.setDiffuse(0.2, 0.2, 0.8, 1.0);
+        this.setSpecular(0.2, 0.2, 0.8, 1.0);
         this.setShininess(10.0);
     }
     /** Handler called when the graph is finally loaded. 
@@ -98,6 +100,8 @@ class XMLscene extends CGFscene {
         this.setGlobalAmbientLight(this.graph.ambient[0], this.graph.ambient[1], this.graph.ambient[2], this.graph.ambient[3]);
 
         this.initLights();
+
+        this.interface.addLightsGroup(this.graph.lights);
 
         this.sceneInited = true;
     }
@@ -120,11 +124,26 @@ class XMLscene extends CGFscene {
         this.applyViewMatrix();
 
         this.pushMatrix();
-        this.axis.display();
+        
+        var i = 0;
+        for (var key in this.lightValues) {
+            if (this.lightValues.hasOwnProperty(key)) {
+                if (this.lightValues[key]) {
+                    this.lights[i].setVisible(true);
+                    this.lights[i].enable();
+                }
+                else {
+                    this.lights[i].setVisible(false);
+                    this.lights[i].disable();
+                }
+                this.lights[i].update();
+                i++;
+            }
+        }
 
         for (var i = 0; i < this.lights.length; i++) {
             this.lights[i].setVisible(true);
-            this.lights[i].enable();
+            //this.lights[i].enable();
         }
 
         if (this.sceneInited) {

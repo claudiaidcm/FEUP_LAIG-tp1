@@ -351,8 +351,8 @@ class MySceneGraph {
             var aux = this.reader.getBoolean(children[i], 'enabled');
             if (!(aux != null && !isNaN(aux) && (aux == true || aux == false)))
                 this.onXMLMinorError("unable to parse value component of the 'enable light' field for ID = " + lightId + "; assuming 'value = 1'");
-
-            enableLight = aux || 1;
+            console.log(aux);
+            enableLight = aux;
 
             //Add enabled boolean and type name to light info
             global.push(enableLight);
@@ -722,6 +722,11 @@ class MySceneGraph {
                 var y3 = this.reader.getFloat(grandChildren[0], 'y3');
                 if (!(y3 != null && !isNaN(y3)))
                     return "unable to parse y3 of the primitive coordinates for ID = " + primitiveId;
+                
+                // z3
+                var z3 = this.reader.getFloat(grandChildren[0], 'z3');
+                if (!(z3 != null && !isNaN(z3)))
+                    return "unable to parse z3 of the primitive coordinates for ID = " + primitiveId;
 
                 // z3
                 var z3 = this.reader.getFloat(grandChildren[0], 'z3');
@@ -847,7 +852,7 @@ class MySceneGraph {
                 var material_id = this.reader.getString(grandgrandChildren[l], 'id');
                 comp_materials.push(material_id);
             }
-
+            
             this.nodes[componentID].materials = comp_materials;
 
             // Texture

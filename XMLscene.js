@@ -12,8 +12,12 @@ class XMLscene extends CGFscene {
         super();
 
         this.interface = myinterface;
-        this.lightValues = {};
-        
+
+        this.displayAxis = true;
+        this.lightsInfo = {};
+        this.camera;
+        this.numMaterial = 0;
+
     }
 
     /**
@@ -44,6 +48,19 @@ class XMLscene extends CGFscene {
     initCameras() {
         this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     }
+
+
+    updateCamera(newCamera) {
+        this.camera = newCamera;
+
+        if (this.graph.views[newCamera][0] == "perspective")
+            this.camera = new CGFcamera(this.graph.views[newCamera][1], this.graph.views[newCamera][2], this.graph.views[newCamera][3], this.graph.views[newCamera][4], this.graph.views[newCamera][5]);
+        else if (this.graph.views[newCamera][0] == "ortho")
+            this.camera = new CGFcameraOrtho(this.graph.views[newCamera][1], this.graph.views[newCamera][2], this.graph.views[newCamera][3], this.graph.views[newCamera][4], this.graph.views[newCamera][5], this.graph.views[newCamera][6], this.graph.views[newCamera][7], this.graph.views[newCamera][8], this.graph.views[newCamera][9]);
+
+        this.interface.setActiveCamera(this.camera);
+    }
+
     /**
      * Initializes the scene lights with the values read from the XML file.
      */
@@ -63,11 +80,14 @@ class XMLscene extends CGFscene {
                 this.lights[i].setAmbient(light[3][0], light[3][1], light[3][2], light[3][3]);
                 this.lights[i].setDiffuse(light[4][0], light[4][1], light[4][2], light[4][3]);
                 this.lights[i].setSpecular(light[5][0], light[5][1], light[5][2], light[5][3]);
+                this.lights[i].setConstantAttenuation(light[6][0]);
+                this.lights[i].setLinearAttenuation(light[6][1]);
+                this.lights[i].setQuadraticAttenuation(light[6][2]);
 
                 if (light[1] == "spot") {
-                    this.lights[i].setSpotCutOff(light[6]);
-                    this.lights[i].setSpotExponent(light[7]);
-                    this.lights[i].setSpotDirection(light[8][0], light[8][1], light[8][2]);
+                    this.lights[i].setSpotCutOff(light[7]);
+                    this.lights[i].setSpotExponent(light[8]);
+                    this.lights[i].setSpotDirection(light[9][0], light[9][1], light[9][2]);
                 }
 
                 this.lights[i].setVisible(true);
@@ -101,7 +121,9 @@ class XMLscene extends CGFscene {
 
         this.initLights();
 
-        this.interface.addLightsGroup(this.graph.lights);
+        this.interface.addLights(this.graph.lights);
+
+        this.interface.addCameras(this.graph.views);
 
         this.sceneInited = true;
     }
@@ -123,33 +145,30 @@ class XMLscene extends CGFscene {
         // Apply transformations corresponding to the camera position relative to the origin
         this.applyViewMatrix();
 
-        this.pushMatrix();
-        
-        var i = 0;
-        for (var key in this.lightValues) {
-            if (this.lightValues.hasOwnProperty(key)) {
-                if (this.lightValues[key]) {
-                    this.lights[i].setVisible(true);
-                    this.lights[i].enable();
-                }
-                else {
-                    this.lights[i].setVisible(false);
-                    this.lights[i].disable();
-                }
-                this.lights[i].update();
-                i++;
-            }
-        }
 
-        for (var i = 0; i < this.lights.length; i++) {
-            this.lights[i].setVisible(true);
-            //this.lights[i].enable();
+        if (this.displayAxis)
+            this.axis.display();
+
+        //goes trough all the lights and enables the ones that are selected
+        var i = 0;
+        for (var key in this.lightsInfo) {
+            //if light is selected
+            if (this.lightsInfo[key]) {
+                this.lights[i].setVisible(true);
+                this.lights[i].enable();
+            }
+            //if light is not selected
+            else {
+                this.lights[i].setVisible(false);
+                this.lights[i].disable();
+            }
+            this.lights[i].update();
+            i++;
         }
+        
+        this.pushMatrix();
 
         if (this.sceneInited) {
-            // Draw axis
-            this.setDefaultAppearance();
-
             // Displays the scene (MySceneGraph function).
             this.graph.displayScene();
         }

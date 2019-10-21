@@ -13,11 +13,10 @@
         </ortho>
     </views>
 
-    <ambient>
+    <globals>
         <ambient r="0.05" g="0.05" b="0.05" a="1.0" />
         <background r="0.0" g="0.0" b="0.0" a="1.0" />
-    </ambient>
-
+    </globals>
    
     <lights>
         <omni id="demolight" enabled="true">
@@ -178,7 +177,7 @@
             <materials>
                 <material id="inherit"  />
             </materials>
-            <texture id="tray" length_s="9" length_t="2" />
+            <texture id="tray" length_s="12" length_t="12" />
             <children>
                 <componentref id="tray_part" />
             </children>
@@ -250,7 +249,7 @@
             <materials>
                 <material id="inherit"  />
             </materials>
-            <texture id="tray" length_s="9" length_t="2" />
+            <texture id="tray" length_s="10" length_t="10" />
             <children>
                 <componentref id="tray_p_y" />
                 <componentref id="tray_n_y" />
@@ -369,6 +368,7 @@
                 <scale x="1" y="0.5" z="1" />
             </transformation>
             <materials>
+                <material id="demoMaterial" />
                 <material id="plastic" />
             </materials>
             <texture id="inherit" />
@@ -677,8 +677,7 @@
                 <primitiveref id="cheese_ball" />
             </children>
         </component> 
-
-
+        
     </components>
 
 </lxs>

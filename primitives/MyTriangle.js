@@ -40,15 +40,6 @@ class MyTriangle extends CGFobject {
 			0, 0, 1,
 		];
 
-		var s12, s13, s23, a1, a2, a3;
-		s12 = Math.sqrt((this.x2 - this.x1) ^ 2 + (this.y2 - this.y1) ^ 2 + (this.z2 - this.z1) ^ 2);
-		s13 = Math.sqrt((this.x3 - this.x1) ^ 2 + (this.y3 - this.y1) ^ 2 + (this.z3 - this.z1) ^ 2);
-		s23 = Math.sqrt((this.x3 - this.x2) ^ 2 + (this.y3 - this.y2) ^ 2 + (this.z3 - this.z2) ^ 2);
-
-		a1 = (-s23 ^ 2 + s12 ^ 2 + s13 ^ 2) / (2 * s12 * s13)
-		a2 = (s23 ^ 2 + s12 ^ 2 - s13 ^ 2) / (2 * s12 * s23)
-		a3 = (s23 ^ 2 - s12 ^ 2 + s13 ^ 2) / (2 * s13 * s23)
-
 		/*
 		Texture coords (s,t)
 		+----------> s
@@ -62,20 +53,27 @@ class MyTriangle extends CGFobject {
 		this.texCoords = [
 			0, 1,
 			1, 1,
-			0.5, 0
+			1, 0
 		];
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
 		this.initGLBuffers();
 	}
 
-	/**
-	 * @method updateTexCoords
-	 * Updates the list of texture coordinates of the rectangle
-	 * @param {Array} coords - Array of texture coordinates
-	 */
-	updateTexCoords(coords) {
-		this.texCoords = [...coords];
+	updateTexLength(length_s, length_t) {
+		this.l1 = Math.sqrt(Math.pow((this.x1 - this.x3), 2) + Math.pow((this.y1 - this.y3), 2) + Math.pow((this.z1 - this.z3), 2));
+		this.l2 = Math.sqrt(Math.pow((this.x2 - this.x1), 2) + Math.pow((this.y2 - this.y1), 2) + Math.pow((this.z2 - this.z1), 2));
+		this.l3 = Math.sqrt(Math.pow((this.x3 - this.x2), 2) + Math.pow((this.y3 - this.y2), 2) + Math.pow((this.z3 - this.z2), 2));
+
+		this.cosB = (Math.pow(this.l1, 2) - Math.pow(this.l2, 2) + Math.pow(this.l3, 2)) / (2 * this.l1 * this.l3);
+		this.sinB = Math.sqrt(1 - Math.pow(this.cosB, 2));
+
+		this.texCoords = [
+			(this.l3 - this.l1 * this.cosB) / length_s, (length_t - this.l1 * this.sinB) / length_t,
+			0, 1,
+			this.l3 / length_s, 1
+		];
+
 		this.updateTexCoordsGLBuffers();
 	}
 }
